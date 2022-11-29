@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from '../../constants/theme';
-import Login from './Login';
-import Register from './Register';
+import { loginPath } from '../../utils/paths';
+import { LoginPage } from './LoginPage';
+import { RegisterPage } from './RegisterPage';
 
 const AccountPageWrapper = styled.div`
   display: flex;
@@ -22,26 +22,14 @@ const ContentWrapper = styled.div`
   border-radius: 20px;
 `;
 
-export const AccountForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-`;
-
-export const AccountLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
 function AccountPage() {
   return (
     <AccountPageWrapper>
       <ContentWrapper>
         <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='*' element={<Navigate to={'/account/login'} />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='*' element={<Navigate to={loginPath} />} />
         </Routes>
       </ContentWrapper>
     </AccountPageWrapper>

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { AccountForm, AccountLabel } from '.';
-import { logIntoAccount } from '../../api/account';
+import { logIntoAccount } from '../../api/account/api';
 import { PrimaryButton } from '../../components/common/Button';
+import { Form, Label } from '../../components/common/Form';
 import { ErrorSpan } from '../../components/common/Span';
 import { useAppDispatch } from '../../hooks/redux';
-import { setToken } from '../../store/account/actions';
-import { useToken } from '../../store/account/hooks';
+import { setAccountData } from '../../store/account/actions';
 import { getErrorMessage } from '../../utils/error';
 
 const LoginWrapper = styled.div`
@@ -26,10 +25,12 @@ const initialLoginInputData: LoginInputData = {
   password: '',
 };
 
-function Login() {
+export function LoginPage() {
   const navigate = useNavigate();
 
-  const [loginData, setLoginData] = useState<LoginInputData>(initialLoginInputData);
+  const [loginData, setLoginData] = useState<LoginInputData>(
+    initialLoginInputData,
+  );
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
@@ -45,7 +46,7 @@ function Login() {
       const token = await logIntoAccount(loginData.login, loginData.password);
 
       setError(null);
-      dispatch(setToken({ token }));
+      dispatch(setAccountData({ token, login: loginData.login }));
       navigate('/rooms/');
     } catch (e) {
       console.error(e);
@@ -56,8 +57,8 @@ function Login() {
   return (
     <LoginWrapper>
       <h1>Sign in</h1>
-      <AccountForm onSubmit={handleSubmit}>
-        <AccountLabel>
+      <Form onSubmit={handleSubmit}>
+        <Label>
           Login:
           <input
             type={'text'}
@@ -66,8 +67,8 @@ function Login() {
             value={loginData.login}
             onChange={handleInputChange}
           />
-        </AccountLabel>
-        <AccountLabel>
+        </Label>
+        <Label>
           Password:
           <input
             type={'text'}
@@ -76,12 +77,10 @@ function Login() {
             value={loginData.password}
             onChange={handleInputChange}
           />
-        </AccountLabel>
+        </Label>
         <PrimaryButton type='submit'>Submit</PrimaryButton>
         {error && <ErrorSpan>{error}</ErrorSpan>}
-      </AccountForm>
+      </Form>
     </LoginWrapper>
   );
 }
-
-export default Login;

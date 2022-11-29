@@ -4,19 +4,13 @@ type AccountResponse = {
   RESULTS: [{ token: [string] }];
 };
 
-function unfoldAccountResponse(response: AccountResponse) {
-  if (!response.RESULTS[0].token || !response.RESULTS[0].token[0]) return null;
-
-  return response.RESULTS[0].token[0];
-}
-
 export async function logIntoAccount(login: string, password: string) {
   const response = await runProcedure<AccountResponse>('login', {
     param1: login,
     param2: password,
   });
 
-  return unfoldAccountResponse(response);
+  return response.RESULTS[0].token[0];
 }
 
 export async function registerAccount(nickname: string, login: string, password: string) {
@@ -26,5 +20,5 @@ export async function registerAccount(nickname: string, login: string, password:
     param3: password,
   });
 
-  return unfoldAccountResponse(response);
+  return response.RESULTS[0].token[0];
 }

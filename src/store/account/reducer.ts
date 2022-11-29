@@ -1,17 +1,25 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setToken } from './actions';
+import { clearAccountData, setAccountData } from './actions';
 
 type AccountState = {
   token: string | null;
+  login: string;
 };
 
 const initialState: AccountState = {
   token: null,
+  login: '',
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(setToken, (state, { payload }) => {
-    const { token } = payload;
-    state.token = token;
-  }),
+  builder
+    .addCase(setAccountData, (state, { payload }) => {
+      const { token, login } = payload;
+      state.token = token;
+      state.login = login;
+    })
+    .addCase(clearAccountData, (state) => {
+      state.token = null;
+      state.login = '';
+    }),
 );

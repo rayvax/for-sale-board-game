@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrimaryButton } from '../../components/common/Button';
 import { useToken } from '../../store/account/hooks';
+import { loginPath, roomsDashboardPath } from '../../utils/paths';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -12,9 +13,11 @@ function HomePage() {
     <div>
       <h1>For sale!</h1>
       {token ? (
-        <PrimaryButton onClick={() => navigate('/rooms/')}>Show rooms</PrimaryButton>
+        <PrimaryButton onClick={() => navigate(roomsDashboardPath)}>
+          Show rooms
+        </PrimaryButton>
       ) : (
-        <PrimaryButton onClick={() => navigate('/account/login')}>Login</PrimaryButton>
+        <PrimaryButton onClick={() => navigate(loginPath)}>Login</PrimaryButton>
       )}
     </div>
   );

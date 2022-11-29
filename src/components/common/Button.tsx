@@ -1,5 +1,4 @@
 import { darken } from 'polished';
-import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../constants/theme';
 
@@ -26,7 +25,7 @@ export const PrimaryButton = styled.button`
     background-color: ${darken(0.1, colors.primary)};
   }
   &:disabled {
-    background-color: ${darken(0.5, colors.primary)};
+    background-color: ${darken(0.2, colors.primary)};
     color: ${darken(0.5, colors.primary)};
     cursor: auto;
     box-shadow: none;

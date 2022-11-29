@@ -1,3 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 
-export const setToken = createAction<{ token: string | null }>('account/setToken');
+export const setAccountData = createAction<{ token: string; login: string }>(
+  'account/setAccountData',
+);
+export const clearAccountData = createAction('account/clearAccountData');

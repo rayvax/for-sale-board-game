@@ -1,13 +1,20 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import RoomsDashboard from './RoomsDashboard';
+import { AccountChecker } from '../../store/account/updater';
+import { CreateRoomPage } from './CreateRoomPage';
+import RoomsDashboard from './RoomDashboard';
+import { RoomPage } from './RoomPage';
 
 function RoomsPage() {
   return (
-    <Routes>
-      <Route path='/' element={<RoomsDashboard />} />
-      <Route path='/:code' element={null} />
-    </Routes>
+    <>
+      <AccountChecker />
+      <Routes>
+        <Route path='/' element={<RoomsDashboard />} />
+        <Route path='/create' element={<CreateRoomPage />} />
+        <Route path='/:code' element={<RoomPage />} />
+      </Routes>
+    </>
   );
 }
 
