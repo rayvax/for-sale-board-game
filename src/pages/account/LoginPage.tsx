@@ -8,6 +8,7 @@ import { ErrorSpan } from '../../components/common/Span';
 import { useAppDispatch } from '../../hooks/redux';
 import { setAccountData } from '../../store/account/actions';
 import { getErrorMessage } from '../../utils/error';
+import { roomsDashboardPath } from '../../utils/paths';
 
 const LoginWrapper = styled.div`
   width: 100%;
@@ -47,7 +48,7 @@ export function LoginPage() {
 
       setError(null);
       dispatch(setAccountData({ token, login: loginData.login }));
-      navigate('/rooms/');
+      navigate(roomsDashboardPath);
     } catch (e) {
       console.error(e);
       setError(getErrorMessage(e));

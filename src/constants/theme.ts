@@ -3,6 +3,7 @@ export const colors = {
   bg1: '#8EE4AF',
   bg2: '#379683',
   primary: '#0cc471',
+  primary2: '#fbcb64',
   secondary: '#EDF4E1',
   text: '#05386B',
   textAlter: '#fefefe',

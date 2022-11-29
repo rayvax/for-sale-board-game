@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getGameState } from '../../api/game/api';
 import { useAppDispatch } from '../../hooks/redux';
 import { useToken } from '../../store/account/hooks';
 import { setGameStoreState } from '../../store/game/actions';
 import { useGameStoreState } from '../../store/game/hooks';
+import { getErrorMessage, isAuthorizationError } from '../../utils/error';
+import { accountPagePath } from '../../utils/paths';
 import { GameTable } from './GameTable';
 import { OpponentsList } from './opponents/OpponentsList';
 import { PlayerState } from './PlayerState';
@@ -20,32 +22,41 @@ export function GamePage() {
   const { code } = useParams();
   const dispatch = useAppDispatch();
   const gameStoreState = useGameStoreState();
+  const navigate = useNavigate();
 
-  async function updateGameState() {
+  const updateGameState = useCallback(async () => {
     if (!token || !code) return;
 
-    const gameState = await getGameState(token, code);
-    dispatch(setGameStoreState(gameState));
-  }
+    try {
+      const gameState = await getGameState(token, code);
+      dispatch(setGameStoreState(gameState));
+    } catch (e) {
+      console.error(e);
+
+      if (isAuthorizationError(e)) navigate(accountPagePath);
+    }
+  }, [token, code, dispatch]);
 
   //update game state
   useEffect(() => {
     let updateGameStateTimeout: NodeJS.Timeout;
 
     async function updateGameStateInTimeout() {
-      await updateGameState();
-
-      console.log('update game state');
-      updateGameStateTimeout = setTimeout(
-        () => updateGameStateInTimeout(),
-        5000,
-      );
+      try {
+        await updateGameState();
+        console.log('game state updated');
+      } finally {
+        updateGameStateTimeout = setTimeout(
+          () => updateGameStateInTimeout(),
+          5000,
+        );
+      }
     }
 
     updateGameStateInTimeout();
 
     return () => clearTimeout(updateGameStateTimeout);
-  }, [token, code, dispatch]);
+  }, [token, code, dispatch, updateGameState]);
 
   if (!gameStoreState) return null;
 

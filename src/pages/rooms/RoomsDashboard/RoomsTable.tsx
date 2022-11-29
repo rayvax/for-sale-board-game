@@ -5,7 +5,7 @@ type RoomTableProps = {
   rooms: Room[];
 };
 
-export function RoomTable({ rooms }: RoomTableProps) {
+export function RoomsTable({ rooms }: RoomTableProps) {
   return (
     <table>
       <thead>

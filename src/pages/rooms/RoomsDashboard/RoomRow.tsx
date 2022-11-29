@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check } from 'react-feather';
+import { Check, Lock } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import { enterRoom } from '../../../api/rooms/api';
 import { PrimaryButton } from '../../../components/common/Button';
@@ -41,7 +41,7 @@ export function RoomItem({ room }: RoomItemProps) {
     <tr>
       <td>{room.code}</td>
       <td>{room.admin.nickname}</td>
-      <td>{room.hasPassword && <Check />}</td>
+      <td>{room.hasPassword && <Lock />}</td>
       <td>
         <PrimaryButton onClick={handleEnterRoom}>Enter room</PrimaryButton>
         {error && <ErrorSpan>{error}</ErrorSpan>}

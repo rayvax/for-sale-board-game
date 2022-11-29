@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AccountChecker } from '../../store/account/updater';
 import { CreateRoomPage } from './CreateRoomPage';
-import RoomsDashboard from './RoomDashboard';
+import RoomsDashboard from './RoomsDashboard';
 import { RoomPage } from './RoomPage';
 
 function RoomsPage() {

@@ -38,6 +38,12 @@ export function RoomPage() {
   }
 
   useEffect(() => {
+    if (!code || !roomState?.hasGameStarted) return;
+
+    navigate(gamePath(code));
+  }, [roomState?.hasGameStarted, code, navigate]);
+
+  useEffect(() => {
     if (!token || !code) return;
 
     async function updateRoomState(token: string, code: string) {

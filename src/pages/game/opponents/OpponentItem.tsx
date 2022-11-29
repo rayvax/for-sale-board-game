@@ -1,4 +1,4 @@
-import { Check, Play, X } from 'react-feather';
+import { Check, X } from 'react-feather';
 import styled from 'styled-components';
 import { colors } from '../../../constants/theme';
 import { OpponentData } from '../../../models/game';
@@ -26,11 +26,27 @@ const OpponentInfoRow = styled.div`
     border-bottom: 3px solid ${colors.bg2};
   }
 `;
+const CurrentTurnIndicator = styled.div`
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    180deg,
+    ${colors.primary2} 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+`;
 
 const OutsideWrapper = styled.div`
+  width: 100%;
+
   position: absolute;
   left: 50%;
-  bottom: 0;
+  bottom: -3px;
   transform: translate(-50%, 100%);
 `;
 
@@ -49,10 +65,7 @@ export function OpponentItem({ player }: OppenentProps) {
     <OpponentWrapper>
       <OutsideWrapper>
         {player.isCurrentTurn && (
-          <>
-            <Play />
-            {turnEndsIn}
-          </>
+          <CurrentTurnIndicator>{turnEndsIn}</CurrentTurnIndicator>
         )}
       </OutsideWrapper>
       <OpponentInfoRow>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useShowRooms } from '../../../api/rooms/hooks';
 import { PrimaryButton } from '../../../components/common/Button';
 import { createRoomPagePath } from '../../../utils/paths';
-import { RoomTable } from './RoomTable';
+import { RoomsTable } from './RoomsTable';
 
 function RoomsDashboard() {
   const rooms = useShowRooms();
@@ -12,11 +12,10 @@ function RoomsDashboard() {
   return (
     <div>
       <h1>Rooms</h1>
-      {rooms && <RoomTable rooms={rooms} />}
-
       <PrimaryButton onClick={() => navigate(createRoomPagePath)}>
         <Plus /> Create room
       </PrimaryButton>
+      {rooms && <RoomsTable rooms={rooms} />}
     </div>
   );
 }
