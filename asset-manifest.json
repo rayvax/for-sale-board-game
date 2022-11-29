@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/for-sale-board-game/static/css/main.99533ca8.css",
-    "main.js": "/for-sale-board-game/static/js/main.2850cb67.js",
+    "main.js": "/for-sale-board-game/static/js/main.a80f0bab.js",
     "index.html": "/for-sale-board-game/index.html",
     "main.99533ca8.css.map": "/for-sale-board-game/static/css/main.99533ca8.css.map",
-    "main.2850cb67.js.map": "/for-sale-board-game/static/js/main.2850cb67.js.map"
+    "main.a80f0bab.js.map": "/for-sale-board-game/static/js/main.a80f0bab.js.map"
   },
   "entrypoints": [
     "static/css/main.99533ca8.css",
-    "static/js/main.2850cb67.js"
+    "static/js/main.a80f0bab.js"
   ]
 }
