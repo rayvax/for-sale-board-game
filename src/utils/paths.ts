@@ -1,4 +1,4 @@
-export const homePagePath = '/for-sale-board-game/';
+export const homePagePath = '/';
 
 export const accountPagePath = `${homePagePath}account`;
 export const loginPath = `${accountPagePath}/login`;

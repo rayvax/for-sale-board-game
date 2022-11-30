@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import AccountPage from './pages/account';
 import NotFound from './pages/errors/NotFound';
 import { GamePage } from './pages/game';
@@ -14,7 +14,7 @@ import {
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path={homePagePath} element={<HomePage />} />
           <Route path={`${accountPagePath}/*`} element={<AccountPage />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path={gamePath(':code')} element={<GamePage />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
