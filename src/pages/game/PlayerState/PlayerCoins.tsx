@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { bidCoins, pass } from '../../../api/game/api';
 import { useGameAPI } from '../../../api/game/hooks';
-import { useToken } from '../../../store/account/hooks';
+import { GamePhase } from '../../../models/game';
 import {
   useGamePhase,
   useHand,
   usePlayerData,
 } from '../../../store/game/hooks';
-import { useRoomCode } from '../../../store/room/hooks';
 
 const PlayerCoinsWrapper = styled.div`
   display: flex;
@@ -19,15 +17,12 @@ const PlayerCoinsWrapper = styled.div`
   grid-area: coins;
 `;
 
-type PlayerCoinsComponentProps = {
-  updateGameState: () => Promise<void>;
-};
-
-export function PlayerCoins({ updateGameState }: PlayerCoinsComponentProps) {
+export function PlayerCoins() {
   const player = usePlayerData();
   const hand = useHand();
   const gamePhase = useGamePhase();
   const gameApi = useGameAPI();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [bidInput, setBidInput] = useState<number | null>();
 
@@ -41,25 +36,38 @@ export function PlayerCoins({ updateGameState }: PlayerCoinsComponentProps) {
     if (!gameApi || !bidInput) return;
 
     (async function () {
+      setIsLoading(true);
       console.log('Bid coins');
-      await gameApi.bidCoins(bidInput);
-      await updateGameState();
+      try {
+        await gameApi.bidCoins(bidInput);
+        await gameApi.updateGameState();
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }
 
   function handlePass() {
     if (!gameApi || !bidInput) return;
     (async function () {
-      console.log('Bid coins');
-      await gameApi.pass();
-      await updateGameState();
+      setIsLoading(true);
+      console.log('Pass');
+
+      try {
+        await gameApi.pass();
+        await gameApi.updateGameState();
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }
 
   return (
     <PlayerCoinsWrapper>
-      <div>{coins} Coins</div>
-      {isCurrentTurn && gamePhase === 'property' && (
+      <div>Hand: {coins} Coins</div>
+      {!!player.bid && <div>Bid: {player.bid}</div>}
+
+      {isCurrentTurn && gamePhase === GamePhase.BID_PROPERTY && (
         <>
           <h2>Your turn</h2>
           <form onSubmit={handleBid}>
@@ -68,10 +76,14 @@ export function PlayerCoins({ updateGameState }: PlayerCoinsComponentProps) {
               value={bidInput ? bidInput.toString() : ''}
               onChange={(e) => setBidInput(Number(e.target.value))}
             />
-            <button type='submit' onClick={handleBid} disabled={!bidInput}>
+            <button
+              type='submit'
+              onClick={handleBid}
+              disabled={!bidInput || isLoading}
+            >
               Bid
             </button>
-            <button type='button' onClick={handlePass}>
+            <button type='button' onClick={handlePass} disabled={isLoading}>
               Pass
             </button>
           </form>

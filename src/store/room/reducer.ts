@@ -1,6 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { RoomState } from '../../models/room';
-import { clearRoomState, saveRoomState, updateRoomState } from './actions';
+import {
+  clearRoomState,
+  saveRoomState,
+  setRoomCode,
+  updateRoomState,
+} from './actions';
 
 type RoomStoreState = {
   roomState: RoomState | null;
@@ -19,6 +24,10 @@ export default createReducer(initialState, (builder) =>
 
       state.code = code;
       state.roomState = roomState;
+    })
+    .addCase(setRoomCode, (state, { payload }) => {
+      const { code } = payload;
+      state.code = code;
     })
     .addCase(updateRoomState, (state, { payload }) => {
       const { roomState } = payload;

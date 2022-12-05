@@ -1,5 +1,6 @@
 import { runProcedure } from '..';
 import {
+  FinalRating,
   GamePhase,
   Hand,
   OpponentData,
@@ -58,11 +59,9 @@ type GameStateResponse = {
 };
 
 function toGameStoreState(resp: GameStateResponse): GameStoreState {
-  const { nickname: winnerNickname, score } = resp.RESULTS[6];
+  const { nickname: winnerNicknames, score } = resp.RESULTS[6];
 
   const playerResp = resp.RESULTS[0];
-  const playerWinnerIndex =
-    winnerNickname?.findIndex((p) => p === playerResp.nickname[0]) ?? 0;
   const player: PlayerData = {
     orderNumber: playerResp.orderNumber[0],
     passed: playerResp.passed[0] === 1,
@@ -70,7 +69,6 @@ function toGameStoreState(resp: GameStateResponse): GameStoreState {
     lastBidProperty: playerResp.lastBidProperty[0] ?? undefined,
     lastBidMoney: playerResp.lastBidMoney[0] ?? undefined,
     isCurrentTurn: playerResp.turnEndsIn[0] !== null,
-    score: score && score[playerWinnerIndex],
   };
 
   const {
@@ -80,21 +78,17 @@ function toGameStoreState(resp: GameStateResponse): GameStoreState {
     bid,
     lastBidProperty,
     lastBidMoney,
-    turnEndsIn: apponentTurnEndsIn,
+    turnEndsIn: opponentTurnEndsIn,
   } = resp.RESULTS[1];
-  const opponents: OpponentData[] = nickname.map((nickname, i) => {
-    const winnerIndex = winnerNickname?.findIndex((p) => p === nickname) ?? 0;
-    return {
-      nickname,
-      orderNumber: orderNumber[i],
-      passed: passed[i] === 1,
-      bid: bid[i],
-      lastBidProperty: lastBidProperty[i] ?? undefined,
-      lastBidMoney: lastBidMoney[i] ?? undefined,
-      isCurrentTurn: apponentTurnEndsIn[i] !== null,
-      score: score && score[winnerIndex],
-    };
-  });
+  const opponents: OpponentData[] = nickname.map((nickname, i) => ({
+    nickname,
+    orderNumber: orderNumber[i],
+    passed: passed[i] === 1,
+    bid: bid[i],
+    lastBidProperty: lastBidProperty[i] ?? undefined,
+    lastBidMoney: lastBidMoney[i] ?? undefined,
+    isCurrentTurn: opponentTurnEndsIn[i] !== null,
+  }));
 
   const hand: Hand = {
     properties: resp.RESULTS[2].handProperty,
@@ -109,18 +103,26 @@ function toGameStoreState(resp: GameStateResponse): GameStoreState {
   };
 
   let gamePhase: GamePhase;
-  if (table.properties) gamePhase = 'property';
-  else if (table.money) gamePhase = 'money';
-  else gamePhase = 'end';
+  if (table.properties) gamePhase = GamePhase.BID_COINS;
+  else if (table.money) gamePhase = GamePhase.BID_PROPERTY;
+  else gamePhase = GamePhase.END;
+
+  const finalRatings: FinalRating[] | undefined = winnerNicknames
+    ? winnerNicknames.map((nickaname, i) => ({
+        nickaname,
+        score: score ? score[i] : 0,
+      }))
+    : undefined;
 
   return {
     player,
     opponents,
     turnEndsIn:
-      apponentTurnEndsIn.find((p) => p !== null) ?? playerResp.turnEndsIn[0],
+      opponentTurnEndsIn.find((p) => p !== null) ?? playerResp.turnEndsIn[0],
     hand,
     table,
     gamePhase,
+    finalRatings,
   };
 }
 
@@ -149,5 +151,17 @@ export async function bidCoins(
     param1: token,
     param2: roomCode,
     param3: bid,
+  });
+}
+
+export async function bidProperty(
+  token: string,
+  roomCode: string,
+  property: string,
+): Promise<void> {
+  return runProcedure<void>('bidProperty', {
+    param1: token,
+    param2: roomCode,
+    param3: property,
   });
 }

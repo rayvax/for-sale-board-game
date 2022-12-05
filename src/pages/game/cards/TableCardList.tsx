@@ -22,8 +22,8 @@ interface CardListProps {
 export function TableCardList({ cardType, cards, alignRight }: CardListProps) {
   return (
     <CardListWrapper alignRight={alignRight}>
-      {cards.map((card) => (
-        <li key={`${cardType}-${card}-table-card`}>
+      {cards.map((card, i) => (
+        <li key={`table-${cardType}-${i}`}>
           <Card type={cardType} value={card} />
         </li>
       ))}

@@ -6,6 +6,7 @@ import { PrimaryButton } from '../../../components/common/Button';
 import { ErrorSpan } from '../../../components/common/Span';
 import { Room } from '../../../models/room';
 import { useAccountLogin, useToken } from '../../../store/account/hooks';
+import { getErrorMessage } from '../../../utils/error';
 import { homePagePath, roomPath } from '../../../utils/paths';
 
 type RoomItemProps = {
@@ -30,10 +31,13 @@ export function RoomItem({ room }: RoomItemProps) {
     }
 
     try {
-      if (room.admin.login !== login) await enterRoom(token, room.code);
+      if (room.admin.login !== login) {
+        await enterRoom(token, room.code);
+      }
       navigate(roomPath(room.code));
     } catch (e) {
       console.error(e);
+      setError(getErrorMessage(e));
     }
   }
 

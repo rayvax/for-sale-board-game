@@ -12,7 +12,7 @@ export function useTurnEndsIn(): number {
 
 export function useGamePhase(): GamePhase {
   const GameStoreState = useGameStoreState();
-  return GameStoreState?.gamePhase ?? 'end';
+  return GameStoreState?.gamePhase ?? GamePhase.END;
 }
 
 export function usePlayerData(): PlayerData | null {

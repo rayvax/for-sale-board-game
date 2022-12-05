@@ -5,6 +5,7 @@ import {
   OpponentData,
   PlayerData,
   Table,
+  FinalRating,
 } from '../../models/game';
 import { clearGameStoreState, setGameStoreState } from './actions';
 
@@ -15,6 +16,8 @@ export type GameStoreState = null | {
 
   hand: Hand;
   table: Table;
+
+  finalRatings?: FinalRating[];
 
   gamePhase: GamePhase;
 };

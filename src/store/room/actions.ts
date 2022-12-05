@@ -6,6 +6,10 @@ export const saveRoomState = createAction<{
   code: string;
 }>('room/saveRoomState');
 
+export const setRoomCode = createAction<{
+  code: string;
+}>('room/setRoomCode');
+
 export const updateRoomState = createAction<{
   roomState: RoomState;
 }>('room/updateRoomState');

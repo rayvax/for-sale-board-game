@@ -1,5 +1,5 @@
 import { runProcedure } from '..';
-import { RoomMember, RoomState } from '../../models/room';
+import { Room, RoomMember, RoomState } from '../../models/room';
 
 export type ResponseRoom = {
   code: string[];
@@ -11,12 +11,23 @@ export type RoomsResponse = {
   RESULTS: [ResponseRoom];
 };
 
+function responseToRooms(response: ResponseRoom): Room[] {
+  return response.code.map((code, i) => ({
+    code,
+    admin: {
+      login: response.adminLogin[i],
+      nickname: response.adminNickname[i],
+    },
+    hasPassword: response.hasPassword[i] === 1,
+  }));
+}
+
 export async function showRooms(token: string) {
   const resp = await runProcedure<RoomsResponse>('showRooms', {
     param1: token,
   });
 
-  return resp.RESULTS[0];
+  return responseToRooms(resp.RESULTS[0]);
 }
 
 export type RoomStateResponse = {

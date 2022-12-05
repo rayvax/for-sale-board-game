@@ -6,36 +6,43 @@ import { useToken } from '../../store/account/hooks';
 import { setStoreError } from '../../store/error/actions';
 import { getErrorMessage } from '../../utils/error';
 
-function responseToRooms(response: ResponseRoom): Room[] {
-  return response.code.map((code, i) => ({
-    code,
-    admin: {
-      login: response.adminLogin[i],
-      nickname: response.adminNickname[i],
-    },
-    hasPassword: response.hasPassword[i] === 1,
-  }));
-}
-
 export function useShowRooms() {
   const token = useToken();
   const dispatch = useAppDispatch();
   const [rooms, setRooms] = useState<Room[] | null>();
 
+  const updateRooms = async () => {
+    if (!token) {
+      setRooms(null);
+      return;
+    }
+
+    try {
+      const respRooms = await showRooms(token);
+
+      setRooms(respRooms);
+      console.log('updated rooms');
+    } catch (e: any) {
+      const message = getErrorMessage(e);
+      console.error(message);
+      dispatch(setStoreError({ message }));
+    }
+  };
+
   useEffect(() => {
-    if (!token) return;
+    let updateRoomsTimeout: NodeJS.Timeout;
 
-    (async function () {
+    async function updateRoomsInTimeout() {
       try {
-        const resp = await showRooms(token);
-
-        setRooms(responseToRooms(resp));
-      } catch (e: any) {
-        const message = getErrorMessage(e);
-        console.error(message);
-        dispatch(setStoreError({ message }));
+        await updateRooms();
+      } finally {
+        updateRoomsTimeout = setTimeout(() => updateRoomsInTimeout(), 5000);
       }
-    })();
+    }
+
+    updateRoomsInTimeout();
+
+    return () => clearTimeout(updateRoomsTimeout);
   }, [token, dispatch]);
 
   return rooms;

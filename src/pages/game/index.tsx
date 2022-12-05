@@ -1,13 +1,11 @@
-import { useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { getGameState } from '../../api/game/api';
+import { useGameAPI } from '../../api/game/hooks';
 import { useAppDispatch } from '../../hooks/redux';
-import { useToken } from '../../store/account/hooks';
-import { setGameStoreState } from '../../store/game/actions';
 import { useGameStoreState } from '../../store/game/hooks';
-import { getErrorMessage, isAuthorizationError } from '../../utils/error';
-import { accountPagePath } from '../../utils/paths';
+import { setRoomCode } from '../../store/room/actions';
+import { useRoomCode } from '../../store/room/hooks';
 import { GameTable } from './GameTable';
 import { OpponentsList } from './opponents/OpponentsList';
 import { PlayerState } from './PlayerState';
@@ -18,24 +16,11 @@ const GamePageWrapper = styled.div`
 `;
 
 export function GamePage() {
-  const token = useToken();
+  const stateRoomCode = useRoomCode();
   const { code } = useParams();
   const dispatch = useAppDispatch();
   const gameStoreState = useGameStoreState();
-  const navigate = useNavigate();
-
-  const updateGameState = useCallback(async () => {
-    if (!token || !code) return;
-
-    try {
-      const gameState = await getGameState(token, code);
-      dispatch(setGameStoreState(gameState));
-    } catch (e) {
-      console.error(e);
-
-      if (isAuthorizationError(e)) navigate(accountPagePath);
-    }
-  }, [token, code, dispatch]);
+  const gameApi = useGameAPI();
 
   //update game state
   useEffect(() => {
@@ -43,7 +28,9 @@ export function GamePage() {
 
     async function updateGameStateInTimeout() {
       try {
-        await updateGameState();
+        if (!gameApi) return;
+
+        await gameApi!.updateGameState();
         console.log('game state updated');
       } finally {
         updateGameStateTimeout = setTimeout(
@@ -56,7 +43,14 @@ export function GamePage() {
     updateGameStateInTimeout();
 
     return () => clearTimeout(updateGameStateTimeout);
-  }, [token, code, dispatch, updateGameState]);
+  }, [gameApi]);
+
+  //save room code
+  useEffect(() => {
+    if (!code || code === stateRoomCode) return;
+
+    dispatch(setRoomCode({ code }));
+  }, [code, stateRoomCode, dispatch]);
 
   if (!gameStoreState) return null;
 
@@ -67,7 +61,7 @@ export function GamePage() {
       <h1>For sale!</h1>
       <GameTable />
       <OpponentsList players={players} />
-      <PlayerState updateGameState={updateGameState} />
+      <PlayerState />
     </GamePageWrapper>
   );
 }

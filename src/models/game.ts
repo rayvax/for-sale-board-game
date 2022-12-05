@@ -5,8 +5,6 @@ export type PlayerData = {
   lastBidProperty?: number;
   lastBidMoney?: number;
   isCurrentTurn: boolean;
-
-  score?: number;
 };
 
 export type OpponentData = {
@@ -25,5 +23,14 @@ export type Table = {
   money?: number[];
 };
 
-export type GamePhase = 'property' | 'money' | 'end';
+export type FinalRating = {
+  nickaname: string;
+  score: number;
+};
+
+export enum GamePhase {
+  BID_COINS,
+  BID_PROPERTY,
+  END,
+}
 export type CardType = 'property' | 'money';
