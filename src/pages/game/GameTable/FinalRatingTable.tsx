@@ -8,10 +8,10 @@ export function FinalRatingTable({ finalRatings }: FinalRatingTableProps) {
   return (
     <table>
       <thead>
-        <th>
-          <td>Nickname</td>
-          <td>Score</td>
-        </th>
+        <tr>
+          <th>Nickname</th>
+          <th>Score</th>
+        </tr>
       </thead>
       <tbody>
         {finalRatings.map((rating, i) => (
