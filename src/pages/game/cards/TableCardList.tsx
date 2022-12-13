@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { CardType } from '../../../models/game';
 import { Card } from './Card';
+import { PropertyCard } from './PropertyCard';
 
 const CardListWrapper = styled.ul<{ alignRight?: boolean }>`
   display: flex;
@@ -24,7 +25,11 @@ export function TableCardList({ cardType, cards, alignRight }: CardListProps) {
     <CardListWrapper alignRight={alignRight}>
       {cards.map((card, i) => (
         <li key={`table-${cardType}-${i}`}>
-          <Card type={cardType} value={card} />
+          {cardType == 'property' ? (
+            <PropertyCard property={card} />
+          ) : (
+            <Card type={'money'} value={card} />
+          )}
         </li>
       ))}
     </CardListWrapper>

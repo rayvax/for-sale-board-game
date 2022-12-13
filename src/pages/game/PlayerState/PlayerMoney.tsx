@@ -1,20 +1,28 @@
 import styled from 'styled-components';
 import { useHand } from '../../../store/game/hooks';
 import { Card } from '../cards/Card';
-const PlayerMoneyWrapper = styled.ul`
+import { MoneyCard } from '../cards/MoneyCard';
+
+const StyledPlayerMoneyList = styled.ul<{ elemCount: number }>`
   list-style: none;
   margin: 0;
   padding: 0;
 
-  width: 100%;
-
   display: grid;
-  grid-auto-flow: column;
+  /* grid-auto-flow: column; */
+  grid-template-columns: repeat(${({ elemCount }) => elemCount}, auto);
+  width: 500px;
 
   grid-area: money;
 `;
 
-export function PlayerMoney() {
+const StyledPlayerMoneyItem = styled.li`
+  &:not(:first-child) {
+    margin-left: -2rem;
+  }
+`;
+
+export function PlayerMoneyList() {
   const hand = useHand();
 
   if (!hand) return null;
@@ -22,12 +30,12 @@ export function PlayerMoney() {
   const { money } = hand;
 
   return (
-    <PlayerMoneyWrapper>
+    <StyledPlayerMoneyList elemCount={money.length}>
       {money.map((m, i) => (
-        <li key={`hand-money-${i}`}>
-          <Card type='money' value={m} />
-        </li>
+        <StyledPlayerMoneyItem key={`hand-money-${i}`}>
+          <MoneyCard value={m} />
+        </StyledPlayerMoneyItem>
       ))}
-    </PlayerMoneyWrapper>
+    </StyledPlayerMoneyList>
   );
 }

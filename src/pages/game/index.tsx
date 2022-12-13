@@ -37,30 +37,33 @@ export function GamePage() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [updateGameStateTimeout, setUpdateGameStateTimeout] =
+    useState<NodeJS.Timeout | null>(null);
 
   //update game state
   useEffect(() => {
-    let updateGameStateTimeout: NodeJS.Timeout;
-
     async function updateGameStateInTimeout() {
-      try {
-        if (!gameApi) return;
+      if (!gameApi) return;
 
+      try {
         await gameApi!.updateGameState();
         console.log('game state updated');
-      } finally {
-        if (gameApi) {
-          updateGameStateTimeout = setTimeout(
-            () => updateGameStateInTimeout(),
-            5000,
-          );
-        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (gameApi) {
+        setUpdateGameStateTimeout(
+          setTimeout(() => updateGameStateInTimeout(), 5000),
+        );
       }
     }
 
     updateGameStateInTimeout();
 
-    return () => clearTimeout(updateGameStateTimeout);
+    return () => {
+      if (updateGameStateTimeout) clearTimeout(updateGameStateTimeout);
+    };
   }, [gameApi]);
 
   //save room code
@@ -76,6 +79,8 @@ export function GamePage() {
     (async function () {
       setIsLoading(true);
       try {
+        if (updateGameStateTimeout) clearTimeout(updateGameStateTimeout);
+
         await leaveRoom(token, roomCode);
         navigate(roomsDashboardPath);
       } finally {
