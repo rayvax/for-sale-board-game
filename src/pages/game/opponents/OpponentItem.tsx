@@ -18,7 +18,7 @@ const OpponentWrapper = styled.li`
 const OpponentInfoRow = styled.div`
   width: 100%;
   box-sizing: border-box;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem 0.1rem;
 
   display: flex;
 
@@ -55,30 +55,42 @@ const OpponentNickname = styled.h3`
 `;
 
 interface OppenentProps {
-  player: OpponentData;
+  opponent: OpponentData;
 }
 
-export function OpponentItem({ player }: OppenentProps) {
+export function OpponentItem({ opponent }: OppenentProps) {
   const turnEndsIn = useTurnEndsIn();
 
   return (
     <OpponentWrapper>
       <OutsideWrapper>
-        {player.isCurrentTurn && (
+        {opponent.isCurrentTurn && (
           <CurrentTurnIndicator>{turnEndsIn}</CurrentTurnIndicator>
         )}
       </OutsideWrapper>
       <OpponentInfoRow>
-        <OpponentNickname>{player.nickname}</OpponentNickname>
+        <OpponentNickname>{opponent.nickname}</OpponentNickname>
       </OpponentInfoRow>
       <OpponentInfoRow>
         <dt>Passed</dt>
-        <dd>{player.passed ? <Check /> : <X />}</dd>
+        <dd>{opponent.passed ? <Check /> : <X />}</dd>
       </OpponentInfoRow>
       <OpponentInfoRow>
         <dt>Bid</dt>
-        <dd>{player.bid}</dd>
+        <dd>{opponent.bid}</dd>
       </OpponentInfoRow>
+      {!!opponent.lastBidProperty && !!opponent.lastBidMoney && (
+        <>
+          <OpponentInfoRow>
+            <dt>Last bid property</dt>
+            <dd>{opponent.lastBidProperty}</dd>
+          </OpponentInfoRow>
+          <OpponentInfoRow>
+            <dt>Last taken money</dt>
+            <dd>{opponent.lastBidMoney}</dd>
+          </OpponentInfoRow>
+        </>
+      )}
     </OpponentWrapper>
   );
 }

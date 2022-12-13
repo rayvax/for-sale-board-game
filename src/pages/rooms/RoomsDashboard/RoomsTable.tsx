@@ -3,9 +3,10 @@ import { RoomItem } from './RoomRow';
 
 type RoomTableProps = {
   rooms: Room[];
+  openPasswordModal: (roomCode: string) => void;
 };
 
-export function RoomsTable({ rooms }: RoomTableProps) {
+export function RoomsTable({ rooms, openPasswordModal }: RoomTableProps) {
   return (
     <table>
       <thead>
@@ -18,7 +19,11 @@ export function RoomsTable({ rooms }: RoomTableProps) {
       </thead>
       <tbody>
         {rooms.map((room) => (
-          <RoomItem key={room.code} room={room} />
+          <RoomItem
+            key={room.code}
+            room={room}
+            openPasswordModal={openPasswordModal}
+          />
         ))}
       </tbody>
     </table>

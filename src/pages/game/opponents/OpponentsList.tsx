@@ -23,7 +23,7 @@ export function OpponentsList({ players }: OpponentsListProps) {
   return (
     <OpponentsListWrapper>
       {players.map((player, i) => (
-        <OpponentItem key={`player-${i}`} player={player} />
+        <OpponentItem key={`player-${i}`} opponent={player} />
       ))}
     </OpponentsListWrapper>
   );

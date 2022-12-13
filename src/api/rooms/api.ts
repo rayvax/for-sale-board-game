@@ -6,6 +6,8 @@ export type ResponseRoom = {
   adminLogin: string[];
   adminNickname: string[];
   hasPassword: number[];
+  hasGameStarted: number[];
+  hasEntered: number[];
 };
 export type RoomsResponse = {
   RESULTS: [ResponseRoom];
@@ -19,6 +21,8 @@ function responseToRooms(response: ResponseRoom): Room[] {
       nickname: response.adminNickname[i],
     },
     hasPassword: response.hasPassword[i] === 1,
+    hasGameStarted: response.hasGameStarted[i] === 1,
+    hasEntered: response.hasEntered[i] === 1,
   }));
 }
 

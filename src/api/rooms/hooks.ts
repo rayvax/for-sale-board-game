@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ResponseRoom, showRooms } from './api';
+import { showRooms } from './api';
 import { useAppDispatch } from '../../hooks/redux';
 import { Room } from '../../models/room';
 import { useToken } from '../../store/account/hooks';

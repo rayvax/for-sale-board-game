@@ -26,7 +26,7 @@ export const PrimaryButton = styled.button`
   }
   &:disabled {
     background-color: ${darken(0.2, colors.primary)};
-    color: ${darken(0.5, colors.primary)};
+    color: ${darken(0.24, colors.primary)};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;

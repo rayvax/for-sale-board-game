@@ -57,7 +57,7 @@ export function LoginPage() {
 
   return (
     <LoginWrapper>
-      <h1>Sign in</h1>
+      <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
         <Label>
           Login:

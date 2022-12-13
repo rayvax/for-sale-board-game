@@ -1,19 +1,26 @@
 import styled from 'styled-components';
 import { useGameAPI } from '../../../../api/game/hooks';
+import { propertyImgPositions } from '../../../../constants/static-data';
 import { colors } from '../../../../constants/theme';
+import Background from './money_0.jpg';
 
-const StyledCard = styled.div`
-  min-width: 110px;
-  min-height: 150px;
+const StyledPropertyCard = styled.div<{
+  imgUrl: string;
+  imgPosition: { x: number; y: number };
+}>`
+  width: 7rem;
+  min-height: 9rem;
 
   display: flex;
   align-items: center;
   flex-direction: column;
   position: relative;
 
-  background-color: ${colors.bg1};
-  border: 3px solid ${colors.primary};
-  border-radius: 20px;
+  background-image: url(${({ imgUrl }) => imgUrl});
+  background-position: ${({ imgPosition }) =>
+    `-${imgPosition.x * 7}rem -${imgPosition.y * 9}rem`};
+  background-size: 70rem 27rem;
+  border-radius: 0.5rem;
 `;
 
 const CardValue = styled.div`
@@ -53,13 +60,15 @@ export function PlayerPropertyCard({
   }
 
   return (
-    <StyledCard>
-      <h3>property</h3> <CardValue>{property}</CardValue>
+    <StyledPropertyCard
+      imgUrl={`${process.env.PUBLIC_URL}/cards/properties.jpg`}
+      imgPosition={propertyImgPositions[property]}
+    >
       {canBid && (
         <button type='button' onClick={handleBidProperty} disabled={isLoading}>
           Bid
         </button>
       )}
-    </StyledCard>
+    </StyledPropertyCard>
   );
 }

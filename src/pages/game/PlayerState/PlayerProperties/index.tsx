@@ -6,11 +6,11 @@ import {
   useHand,
   usePlayerData,
 } from '../../../../store/game/hooks';
-import { StakedCardLI } from '../../cards/StakedCardLI';
 import { PlayerPropertyCard } from './PlayerProperty';
 
 const PlayerPropertiesStyledList = styled.ul`
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
 
   grid-area: prop;
 
@@ -34,14 +34,14 @@ export function PlayerPropertiesList() {
   return (
     <PlayerPropertiesStyledList>
       {properties.map((property) => (
-        <StakedCardLI key={`${property}-hand-property`}>
+        <li key={`${property}-hand-property`}>
           <PlayerPropertyCard
             property={property}
             canBid={canBid}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
           />
-        </StakedCardLI>
+        </li>
       ))}
     </PlayerPropertiesStyledList>
   );

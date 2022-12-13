@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { useHand } from '../../../store/game/hooks';
 import { Card } from '../cards/Card';
-import { StakedCardLI } from '../cards/StakedCardLI';
-
 const PlayerMoneyWrapper = styled.ul`
   list-style: none;
   margin: 0;
@@ -10,9 +8,8 @@ const PlayerMoneyWrapper = styled.ul`
 
   width: 100%;
 
-  display: flex;
-  align-items: flex-end;
-  justify-content: end;
+  display: grid;
+  grid-auto-flow: column;
 
   grid-area: money;
 `;
@@ -27,9 +24,9 @@ export function PlayerMoney() {
   return (
     <PlayerMoneyWrapper>
       {money.map((m, i) => (
-        <StakedCardLI key={`hand-money-${i}`}>
+        <li key={`hand-money-${i}`}>
           <Card type='money' value={m} />
-        </StakedCardLI>
+        </li>
       ))}
     </PlayerMoneyWrapper>
   );

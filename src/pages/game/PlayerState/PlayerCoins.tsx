@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useGameAPI } from '../../../api/game/hooks';
+import { ErrorSpan } from '../../../components/common/Span';
 import { GamePhase } from '../../../models/game';
 import {
   useGamePhase,
   useHand,
   usePlayerData,
 } from '../../../store/game/hooks';
+import { getErrorMessage } from '../../../utils/error';
 
 const PlayerCoinsWrapper = styled.div`
   display: flex;
@@ -23,6 +25,7 @@ export function PlayerCoins() {
   const gamePhase = useGamePhase();
   const gameApi = useGameAPI();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>();
 
   const [bidInput, setBidInput] = useState<number | null>();
 
@@ -41,6 +44,8 @@ export function PlayerCoins() {
       try {
         await gameApi.bidCoins(bidInput);
         await gameApi.updateGameState();
+      } catch (e) {
+        setError(getErrorMessage(e));
       } finally {
         setIsLoading(false);
       }
@@ -48,7 +53,7 @@ export function PlayerCoins() {
   }
 
   function handlePass() {
-    if (!gameApi || !bidInput) return;
+    if (!gameApi) return;
     (async function () {
       setIsLoading(true);
       console.log('Pass');
@@ -56,6 +61,8 @@ export function PlayerCoins() {
       try {
         await gameApi.pass();
         await gameApi.updateGameState();
+      } catch (e) {
+        setError(getErrorMessage(e));
       } finally {
         setIsLoading(false);
       }
@@ -67,7 +74,7 @@ export function PlayerCoins() {
       <div>Hand: {coins} Coins</div>
       {!!player.bid && <div>Bid: {player.bid}</div>}
 
-      {isCurrentTurn && gamePhase === GamePhase.BID_PROPERTY && (
+      {isCurrentTurn && gamePhase === GamePhase.BID_COINS && (
         <>
           <h2>Your turn</h2>
           <form onSubmit={handleBid}>
@@ -87,6 +94,7 @@ export function PlayerCoins() {
               Pass
             </button>
           </form>
+          {error && <ErrorSpan>{error}</ErrorSpan>}
         </>
       )}
     </PlayerCoinsWrapper>

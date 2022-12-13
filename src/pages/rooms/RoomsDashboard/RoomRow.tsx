@@ -7,13 +7,14 @@ import { ErrorSpan } from '../../../components/common/Span';
 import { Room } from '../../../models/room';
 import { useAccountLogin, useToken } from '../../../store/account/hooks';
 import { getErrorMessage } from '../../../utils/error';
-import { homePagePath, roomPath } from '../../../utils/paths';
+import { gamePath, homePagePath, roomPath } from '../../../utils/paths';
 
 type RoomItemProps = {
   room: Room;
+  openPasswordModal: (room: string) => void;
 };
 
-export function RoomItem({ room }: RoomItemProps) {
+export function RoomItem({ room, openPasswordModal }: RoomItemProps) {
   const token = useToken();
   const login = useAccountLogin();
   const navigate = useNavigate();
@@ -25,8 +26,15 @@ export function RoomItem({ room }: RoomItemProps) {
       return;
     }
 
+    if (room.hasEntered) {
+      if (room.hasGameStarted) navigate(gamePath(room.code));
+      else navigate(roomPath(room.code));
+
+      return;
+    }
+
     if (room.hasPassword) {
-      setError('Room has password');
+      openPasswordModal(room.code);
       return;
     }
 
@@ -47,7 +55,12 @@ export function RoomItem({ room }: RoomItemProps) {
       <td>{room.admin.nickname}</td>
       <td>{room.hasPassword && <Lock />}</td>
       <td>
-        <PrimaryButton onClick={handleEnterRoom}>Enter room</PrimaryButton>
+        <PrimaryButton
+          onClick={handleEnterRoom}
+          disabled={!room.hasEntered && room.hasGameStarted}
+        >
+          {room.hasEntered ? 'Return' : 'Enter room'}
+        </PrimaryButton>
         {error && <ErrorSpan>{error}</ErrorSpan>}
       </td>
     </tr>

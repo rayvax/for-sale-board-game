@@ -6,7 +6,7 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { useAppDispatch } from '../../hooks/redux';
 import { clearAccountData } from '../../store/account/actions';
 import { useToken } from '../../store/account/hooks';
-import { loginPath, roomsDashboardPath } from '../../utils/paths';
+import { loginPath, registerPath, roomsDashboardPath } from '../../utils/paths';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -40,7 +40,14 @@ function HomePage() {
           Show rooms
         </PrimaryButton>
       ) : (
-        <PrimaryButton onClick={() => navigate(loginPath)}>Login</PrimaryButton>
+        <>
+          <PrimaryButton onClick={() => navigate(loginPath)}>
+            Login
+          </PrimaryButton>
+          <PrimaryButton onClick={() => navigate(registerPath)}>
+            Register
+          </PrimaryButton>
+        </>
       )}
     </div>
   );
