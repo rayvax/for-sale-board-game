@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { markDbError } from '../../api/game/api';
 import { useGameAPI } from '../../api/game/hooks';
@@ -102,7 +102,7 @@ function useUpdatedGameState(code: string | null) {
 
       try {
         await gameApi!.updateGameState();
-        console.log('game state updated');
+        // console.log('game state updated');
       } catch (e) {
         console.error(e);
         markDbError(getErrorMessage(e));

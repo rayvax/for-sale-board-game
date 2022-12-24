@@ -4,7 +4,7 @@ import { colors } from '../../../constants/theme';
 import { OpponentData } from '../../../models/game';
 import { useTurnEndsIn } from '../../../store/game/hooks';
 
-const OpponentWrapper = styled.li`
+const OpponentWrapper = styled.li<{ needHightlight: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -13,6 +13,9 @@ const OpponentWrapper = styled.li`
 
   background-color: ${colors.bg1};
   border: 3px solid ${colors.bg2};
+
+  ${({ needHightlight }) =>
+    needHightlight && `box-shadow: 0 0 10px 5px ${colors.primary2};`}
 `;
 
 const OpponentInfoRow = styled.div`
@@ -33,12 +36,6 @@ const CurrentTurnIndicator = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  background: linear-gradient(
-    180deg,
-    ${colors.primary2} 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
 `;
 
 const OutsideWrapper = styled.div`
@@ -62,15 +59,17 @@ export function OpponentItem({ opponent }: OppenentProps) {
   const turnEndsIn = useTurnEndsIn();
 
   return (
-    <OpponentWrapper>
+    <OpponentWrapper needHightlight={opponent.isCurrentTurn}>
       <OutsideWrapper>
         {opponent.isCurrentTurn && (
-          <CurrentTurnIndicator>{turnEndsIn}</CurrentTurnIndicator>
+          <CurrentTurnIndicator>
+            Turn ends in: {turnEndsIn}
+          </CurrentTurnIndicator>
         )}
       </OutsideWrapper>
       <OpponentInfoRow>
         <OpponentNickname>
-          {opponent.orderNumber}. {opponent.nickname}
+          {opponent.orderNumber}. {opponent.nickname || 'Bot'}
         </OpponentNickname>
       </OpponentInfoRow>
       <OpponentInfoRow>

@@ -121,3 +121,9 @@ export const propertyImgPositions: PropertyImagePositions = {
     y: 0,
   },
 };
+
+export const cardRemHeight = 9;
+export const moneyCardAspectRatio = 1.838;
+export const moneyCardWidth = cardRemHeight / moneyCardAspectRatio;
+export const propertyCardAspectRatio = 9 / 7;
+export const propertyCardWidth = cardRemHeight / propertyCardAspectRatio;

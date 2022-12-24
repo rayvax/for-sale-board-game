@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { moneyCardWidth } from '../../../constants/static-data';
 import { useHand } from '../../../store/game/hooks';
 import { MoneyCard } from '../cards/MoneyCard';
 
@@ -11,7 +12,7 @@ const StyledPlayerMoneyList = styled.ul<{ cardCount: number }>`
   grid-template-columns: repeat(${({ cardCount }) => cardCount}, 1fr);
   grid-template-rows: auto;
 
-  width: 500px;
+  width: calc(100% - ${moneyCardWidth}rem);
 
   grid-area: money;
 

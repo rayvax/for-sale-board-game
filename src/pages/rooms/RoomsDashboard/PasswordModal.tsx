@@ -18,20 +18,21 @@ const PasswordModalWrapper = styled.div`
   left: 0;
   right: 0;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const PasswordModalWindow = styled.div`
-  position: relative;
+  position: fixed;
+
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
 
   min-width: 25rem;
   min-height: 20rem;
 
   padding: 1rem 2rem;
+  margin: 0 auto;
 
   background-color: ${colors.bg1};
   border-radius: 1rem;

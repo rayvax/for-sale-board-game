@@ -8,7 +8,8 @@ export const PrimaryButton = styled.button`
   color: ${colors.textAlter};
   background-color: ${colors.primary};
 
-  font-size: 1rem;
+  font-size: 24px;
+  font-family: 'Bebas Neue';
 
   border: none;
   border-radius: 20px;
@@ -26,7 +27,7 @@ export const PrimaryButton = styled.button`
   }
   &:disabled {
     background-color: ${darken(0.2, colors.primary)};
-    color: ${darken(0.24, colors.primary)};
+    color: ${darken(0.26, colors.primary)};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;

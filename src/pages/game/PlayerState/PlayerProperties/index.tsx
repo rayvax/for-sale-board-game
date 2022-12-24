@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { propertyCardWidth } from '../../../../constants/static-data';
 import { GamePhase } from '../../../../models/game';
 import {
   useGamePhase,
@@ -18,6 +19,8 @@ const PlayerPropertiesStyledList = styled.ul<{ cardCount: number }>`
   margin: 0;
   padding: 0;
   list-style: none;
+
+  width: calc(100% - ${propertyCardWidth}rem);
 
   & li {
     min-width: 0;

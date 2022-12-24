@@ -2,14 +2,17 @@ import styled from 'styled-components';
 import { PlayerCoins } from './PlayerCoins';
 import { PlayerMoneyList } from './PlayerMoney';
 import { PlayerPropertiesList } from './PlayerProperties';
-import { PlayerMainInfo } from './PlayerTurnState';
+import { PlayerMainInfo } from './PlayerMainInfo';
 
 const PlayerWrapper = styled.div`
-  width: 90%;
+  box-sizing: border-box;
+  width: 100%;
   position: absolute;
-  bottom: 1rem;
+  bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
+
+  padding: 0 3rem 1rem;
 
   display: grid;
   grid-template-areas: 'turn turn turn' 'money coins prop';

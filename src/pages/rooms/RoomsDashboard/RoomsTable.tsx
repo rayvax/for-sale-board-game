@@ -1,5 +1,26 @@
+import styled from 'styled-components';
+import { colors } from '../../../constants/theme';
 import { Room } from '../../../models/room';
 import { RoomItem } from './RoomRow';
+
+const StyledRoomsTable = styled.table`
+  border-collapse: collapse;
+
+  min-width: 700px;
+`;
+
+const RoomsTableHeading = styled.thead`
+  font-size: 32px;
+`;
+const RoomsTableHeadingColumn = styled.td`
+  padding: 0.5rem 1rem;
+
+  background-color: ${colors.bg1};
+  border: 2px solid ${colors.text};
+`;
+const PasswordHeadingColumn = styled(RoomsTableHeadingColumn)`
+  text-align: center;
+`;
 
 type RoomTableProps = {
   rooms: Room[];
@@ -8,15 +29,15 @@ type RoomTableProps = {
 
 export function RoomsTable({ rooms, openPasswordModal }: RoomTableProps) {
   return (
-    <table>
-      <thead>
+    <StyledRoomsTable>
+      <RoomsTableHeading>
         <tr>
-          <td>Code</td>
-          <td>Admin</td>
-          <td>Password</td>
+          <RoomsTableHeadingColumn>Code</RoomsTableHeadingColumn>
+          <RoomsTableHeadingColumn>Admin</RoomsTableHeadingColumn>
+          <PasswordHeadingColumn>Password</PasswordHeadingColumn>
           <td></td>
         </tr>
-      </thead>
+      </RoomsTableHeading>
       <tbody>
         {rooms.map((room) => (
           <RoomItem
@@ -26,6 +47,6 @@ export function RoomsTable({ rooms, openPasswordModal }: RoomTableProps) {
           />
         ))}
       </tbody>
-    </table>
+    </StyledRoomsTable>
   );
 }

@@ -1,30 +1,17 @@
 import styled from 'styled-components';
-
-const moneyCardWidth = 6;
-const moneyCardAspectRatio = 1.838;
-const moneyCardHeight = moneyCardWidth * moneyCardAspectRatio;
-
-const MoneyCardWrapper = styled.div`
-  width: ${moneyCardWidth}rem;
-  height: ${moneyCardHeight}rem;
-  position: relative;
-`;
+import { cardRemHeight, moneyCardWidth } from '../../../constants/static-data';
 
 type StyledMoneyCardProps = {
   imgUrl: string;
 };
 const StyledMoneyCard = styled.div<StyledMoneyCardProps>`
-  width: ${moneyCardHeight}rem;
-  height: ${moneyCardWidth}rem;
+  width: ${moneyCardWidth}rem;
+  height: ${cardRemHeight}rem;
 
   background-image: url(${({ imgUrl }) => imgUrl});
-  transform: rotate(-90deg);
   background-size: contain;
   background-repeat: no-repeat;
 
-  position: absolute;
-  top: 25%;
-  left: -50%;
   border-radius: 5px;
 `;
 
@@ -34,10 +21,8 @@ type PropertyCardProps = {
 
 export function MoneyCard({ value }: PropertyCardProps) {
   return (
-    <MoneyCardWrapper>
-      <StyledMoneyCard
-        imgUrl={`${process.env.PUBLIC_URL}/cards/money_${value}.jpg`}
-      />
-    </MoneyCardWrapper>
+    <StyledMoneyCard
+      imgUrl={`${process.env.PUBLIC_URL}/cards/money_${value}.jpg`}
+    />
   );
 }

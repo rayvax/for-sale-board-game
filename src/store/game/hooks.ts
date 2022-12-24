@@ -15,9 +15,7 @@ export function useUpdateTurnEndState() {
     if (!GameStoreState?.turnEndsIn) return;
 
     const turnEndInterval = setInterval(() => {
-      if (!GameStoreState.turnEndsIn) return;
-      console.log('UPDATE TIME');
-
+      if (!GameStoreState.turnEndsIn || GameStoreState.turnEndsIn <= 0) return;
       dispatch(setTurnEndsIn(GameStoreState.turnEndsIn - 1));
     }, 1000);
 

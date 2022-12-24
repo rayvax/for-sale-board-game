@@ -1,13 +1,31 @@
 import { useState } from 'react';
-import { Check, Lock } from 'react-feather';
+import { Lock } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { enterRoom } from '../../../api/rooms/api';
 import { PrimaryButton } from '../../../components/common/Button';
 import { ErrorSpan } from '../../../components/common/Span';
+import { colors } from '../../../constants/theme';
 import { Room } from '../../../models/room';
 import { useAccountLogin, useToken } from '../../../store/account/hooks';
 import { getErrorMessage } from '../../../utils/error';
 import { gamePath, homePagePath, roomPath } from '../../../utils/paths';
+
+const StyledRoomItem = styled.tr``;
+const RoomItemColumn = styled.td`
+  padding: 0.5rem 1rem;
+  border: 2px solid ${colors.text};
+`;
+const PasswordColumn = styled(RoomItemColumn)`
+  text-align: center;
+`;
+const ButtonColumn = styled(RoomItemColumn)`
+  border: none;
+
+  & button {
+    width: 100%;
+  }
+`;
 
 type RoomItemProps = {
   room: Room;
@@ -50,11 +68,11 @@ export function RoomItem({ room, openPasswordModal }: RoomItemProps) {
   }
 
   return (
-    <tr>
-      <td>{room.code}</td>
-      <td>{room.admin.nickname}</td>
-      <td>{room.hasPassword && <Lock />}</td>
-      <td>
+    <StyledRoomItem>
+      <RoomItemColumn>{room.code}</RoomItemColumn>
+      <RoomItemColumn>{room.admin.nickname}</RoomItemColumn>
+      <PasswordColumn>{room.hasPassword && <Lock />}</PasswordColumn>
+      <ButtonColumn>
         <PrimaryButton
           onClick={handleEnterRoom}
           disabled={!room.hasEntered && room.hasGameStarted}
@@ -62,7 +80,7 @@ export function RoomItem({ room, openPasswordModal }: RoomItemProps) {
           {room.hasEntered ? 'Return' : 'Enter room'}
         </PrimaryButton>
         {error && <ErrorSpan>{error}</ErrorSpan>}
-      </td>
-    </tr>
+      </ButtonColumn>
+    </StyledRoomItem>
   );
 }

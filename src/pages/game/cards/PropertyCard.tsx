@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { propertyImgPositions } from '../../../constants/static-data';
+import {
+  cardRemHeight,
+  propertyCardAspectRatio,
+  propertyCardWidth,
+  propertyImgPositions,
+} from '../../../constants/static-data';
 import { colors } from '../../../constants/theme';
 
 type StyledPropertyCardProps = {
@@ -8,29 +13,28 @@ type StyledPropertyCardProps = {
   hoverPointer: boolean;
 };
 const StyledPropertyCard = styled.div<StyledPropertyCardProps>`
-  width: 7rem;
-  min-height: 9rem;
-
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
+  width: ${propertyCardWidth}rem;
+  height: ${cardRemHeight}rem;
 
   background-image: url(${({ imgUrl }) => imgUrl});
   background-position: ${({ imgPosition }) =>
-    `-${imgPosition.x * 7}rem -${imgPosition.y * 9}rem`};
-  background-size: 70rem 27rem;
+    `-${imgPosition.x * propertyCardWidth}rem -${
+      imgPosition.y * cardRemHeight
+    }rem`};
+  background-size: ${`${propertyCardWidth * 10}rem ${cardRemHeight * 3}rem`};
   border-radius: 0.5rem;
 
-  ${({ hoverPointer }) =>
-    hoverPointer &&
-    `
-    & :hover{
-      cursor: pointer;
+  transition: transform 0.5s;
 
+  ${({ hoverPointer }) => {
+    if (!hoverPointer) return '';
+
+    return `
+    :hover{
+      cursor: pointer;
       box-shadow: 0 0 10px 5px ${colors.primary2};
-    }
-  `}
+    }`;
+  }}
 `;
 
 type PropertyCardProps = {
