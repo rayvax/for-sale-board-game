@@ -7,7 +7,11 @@ import {
   Table,
   FinalRating,
 } from '../../models/game';
-import { clearGameStoreState, setGameStoreState } from './actions';
+import {
+  clearGameStoreState,
+  setGameStoreState,
+  setTurnEndsIn,
+} from './actions';
 
 export type GameStoreState = null | {
   player: PlayerData;
@@ -27,5 +31,10 @@ const initialState: GameStoreState = null;
 export default createReducer(initialState as GameStoreState, (builder) =>
   builder
     .addCase(setGameStoreState, (state, { payload }) => (state = payload))
-    .addCase(clearGameStoreState, (state) => (state = null)),
+    .addCase(clearGameStoreState, (state) => (state = null))
+    .addCase(setTurnEndsIn, (state, { payload }) => {
+      if (!state) return;
+
+      state.turnEndsIn = payload;
+    }),
 );

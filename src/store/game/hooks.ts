@@ -1,27 +1,34 @@
-import { useEffect, useState } from 'react';
-import { useAppSelector } from '../../hooks/redux';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { GamePhase, Hand, PlayerData } from '../../models/game';
+import { setTurnEndsIn } from './actions';
 
 export function useGameStoreState() {
   return useAppSelector((state) => state.game);
 }
 
-export function useTurnEndsIn(): number {
+export function useUpdateTurnEndState() {
   const GameStoreState = useGameStoreState();
-  const [turnEndsIn, setTurnEndsIn] = useState(0);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!GameStoreState?.turnEndsIn) return;
 
-    setTurnEndsIn(GameStoreState.turnEndsIn);
     const turnEndInterval = setInterval(() => {
-      setTurnEndsIn((prev) => prev - 1);
+      if (!GameStoreState.turnEndsIn) return;
+      console.log('UPDATE TIME');
+
+      dispatch(setTurnEndsIn(GameStoreState.turnEndsIn - 1));
     }, 1000);
 
     return () => clearInterval(turnEndInterval);
-  }, [GameStoreState?.turnEndsIn]);
+  }, [GameStoreState?.turnEndsIn, dispatch]);
+}
 
-  return turnEndsIn;
+export function useTurnEndsIn(): number {
+  const GameStoreState = useGameStoreState();
+
+  return GameStoreState?.turnEndsIn ?? 0;
 }
 
 export function useGamePhase(): GamePhase {

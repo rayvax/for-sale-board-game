@@ -6,7 +6,11 @@ import { useGameAPI } from '../../api/game/hooks';
 import { leaveRoom } from '../../api/rooms/api';
 import { GamePhase } from '../../models/game';
 import { useToken } from '../../store/account/hooks';
-import { useGamePhase, useGameStoreState } from '../../store/game/hooks';
+import {
+  useGamePhase,
+  useGameStoreState,
+  useUpdateTurnEndState,
+} from '../../store/game/hooks';
 import { useRoomCode } from '../../store/room/hooks';
 import { getErrorMessage } from '../../utils/error';
 import { roomsDashboardPath } from '../../utils/paths';
@@ -26,7 +30,6 @@ const CornerButtonsList = styled.button`
 `;
 
 export function GamePage() {
-  const { code } = useParams();
   const gameStoreState = useGameStoreState();
   const gamePhase = useGamePhase();
   const token = useToken();
@@ -89,6 +92,7 @@ export function GamePage() {
 function useUpdatedGameState(code: string | null) {
   const gameApi = useGameAPI();
   const stateRoomCode = useRoomCode();
+  useUpdateTurnEndState();
 
   //update game state
   useEffect(() => {
