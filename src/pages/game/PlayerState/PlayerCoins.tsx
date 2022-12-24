@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { markDbError } from '../../../api/game/api';
 import { useGameAPI } from '../../../api/game/hooks';
 import { ErrorSpan } from '../../../components/common/Span';
 import { GamePhase } from '../../../models/game';
@@ -46,6 +47,7 @@ export function PlayerCoins() {
         await gameApi.updateGameState();
       } catch (e) {
         setError(getErrorMessage(e));
+        markDbError(getErrorMessage(e));
       } finally {
         setIsLoading(false);
       }

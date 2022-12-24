@@ -63,6 +63,7 @@ function toGameStoreState(resp: GameStateResponse): GameStoreState {
 
   const playerResp = resp.RESULTS[0];
   const player: PlayerData = {
+    nickname: playerResp.nickname[0],
     orderNumber: playerResp.orderNumber[0],
     passed: playerResp.passed[0] === 1,
     bid: playerResp.bid[0],
@@ -163,5 +164,11 @@ export async function bidProperty(
     param1: token,
     param2: roomCode,
     param3: property,
+  });
+}
+
+export async function markDbError(description: string) {
+  return runProcedure<void>('markError', {
+    param1: description,
   });
 }

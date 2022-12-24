@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/redux';
 import { GamePhase, Hand, PlayerData } from '../../models/game';
 
@@ -7,7 +8,20 @@ export function useGameStoreState() {
 
 export function useTurnEndsIn(): number {
   const GameStoreState = useGameStoreState();
-  return GameStoreState?.turnEndsIn ?? 0;
+  const [turnEndsIn, setTurnEndsIn] = useState(0);
+
+  useEffect(() => {
+    if (!GameStoreState?.turnEndsIn) return;
+
+    setTurnEndsIn(GameStoreState.turnEndsIn);
+    const turnEndInterval = setInterval(() => {
+      setTurnEndsIn((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(turnEndInterval);
+  }, [GameStoreState?.turnEndsIn]);
+
+  return turnEndsIn;
 }
 
 export function useGamePhase(): GamePhase {

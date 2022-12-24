@@ -8,15 +8,20 @@ import {
 } from '../../../../store/game/hooks';
 import { PlayerPropertyCard } from './PlayerProperty';
 
-const PlayerPropertiesStyledList = styled.ul`
+const PlayerPropertiesStyledList = styled.ul<{ cardCount: number }>`
   display: grid;
-  grid-auto-flow: column;
+  grid-template-columns: repeat(${({ cardCount }) => cardCount}, 1fr);
+  grid-template-rows: auto;
 
   grid-area: prop;
 
   margin: 0;
   padding: 0;
   list-style: none;
+
+  & li {
+    min-width: 0;
+  }
 `;
 
 export function PlayerPropertiesList() {
@@ -32,7 +37,7 @@ export function PlayerPropertiesList() {
   const canBid = player.isCurrentTurn && gamePhase === GamePhase.BID_PROPERTY;
 
   return (
-    <PlayerPropertiesStyledList>
+    <PlayerPropertiesStyledList cardCount={properties.length}>
       {properties.map((property) => (
         <li key={`${property}-hand-property`}>
           <PlayerPropertyCard

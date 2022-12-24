@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { showRooms } from './api';
 import { useAppDispatch } from '../../hooks/redux';
 import { Room } from '../../models/room';
@@ -11,7 +11,7 @@ export function useShowRooms() {
   const dispatch = useAppDispatch();
   const [rooms, setRooms] = useState<Room[] | null>();
 
-  const updateRooms = async () => {
+  const updateRooms = useCallback(async () => {
     if (!token) {
       setRooms(null);
       return;
@@ -27,7 +27,7 @@ export function useShowRooms() {
       console.error(message);
       dispatch(setStoreError({ message }));
     }
-  };
+  }, [token, dispatch]);
 
   useEffect(() => {
     let updateRoomsTimeout: NodeJS.Timeout;
@@ -43,7 +43,7 @@ export function useShowRooms() {
     updateRoomsInTimeout();
 
     return () => clearTimeout(updateRoomsTimeout);
-  }, [token, dispatch]);
+  }, [token, dispatch, updateRooms]);
 
   return rooms;
 }

@@ -1,4 +1,5 @@
 export type PlayerData = {
+  nickname: string;
   orderNumber: number;
   passed: boolean;
   bid: number;

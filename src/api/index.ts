@@ -6,7 +6,8 @@ axios.defaults.baseURL = 'https://sql.lavro.ru/';
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
-  get: <T>(params: any) => axios.get<T>('call.php', { params }).then(responseBody),
+  get: <T>(params: any) =>
+    axios.get<T>('call.php', { params }).then(responseBody),
   // post: <T>(url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
   // put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
   // del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
@@ -28,8 +29,17 @@ export type RunProcedureOptions = {
   results?: 'array' | 'object';
 };
 
-export async function runProcedure<T>(name: string, options?: RunProcedureOptions): Promise<T> {
-  const { param1, param2, param3, format = 'columns_compact', results } = options ?? {};
+export async function runProcedure<T>(
+  name: string,
+  options?: RunProcedureOptions,
+): Promise<T> {
+  const {
+    param1,
+    param2,
+    param3,
+    format = 'columns_compact',
+    results,
+  } = options ?? {};
 
   const response = await requests.get<T>({
     db: dataBaseNumber,
@@ -42,7 +52,14 @@ export async function runProcedure<T>(name: string, options?: RunProcedureOption
   });
 
   const sqlError = (response as SqlErrorResponse).ERROR;
-  if (sqlError) console.error('SQL Error', sqlError);
+  if (sqlError) {
+    requests.get<T>({
+      db: dataBaseNumber,
+      pname: 'markError',
+      p1: 'React: ' + sqlError,
+    });
+    console.error('SQL Error', sqlError);
+  }
 
   const errorResponse = (response as ErrorResponse).RESULTS[0].error;
   if (errorResponse) throw new Error(errorResponse[0]);

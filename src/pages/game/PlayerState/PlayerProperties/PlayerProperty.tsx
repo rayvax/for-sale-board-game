@@ -1,4 +1,6 @@
+import { markDbError } from '../../../../api/game/api';
 import { useGameAPI } from '../../../../api/game/hooks';
+import { getErrorMessage } from '../../../../utils/error';
 import { PropertyCard } from '../../cards/PropertyCard';
 
 type PlayerPropertyProps = {
@@ -25,6 +27,8 @@ export function PlayerPropertyCard({
 
         await gameApi.bidProperty(property);
         await gameApi.updateGameState();
+      } catch (e) {
+        markDbError(getErrorMessage(e));
       } finally {
         setIsLoading(false);
       }

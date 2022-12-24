@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { PlayerCoins } from './PlayerCoins';
 import { PlayerMoneyList } from './PlayerMoney';
 import { PlayerPropertiesList } from './PlayerProperties';
-import { PlayerTurnInfo } from './PlayerTurnState';
+import { PlayerMainInfo } from './PlayerTurnState';
 
 const PlayerWrapper = styled.div`
   width: 90%;
@@ -20,7 +20,7 @@ const PlayerWrapper = styled.div`
 export function PlayerState() {
   return (
     <PlayerWrapper>
-      <PlayerTurnInfo />
+      <PlayerMainInfo />
       <PlayerMoneyList />
       <PlayerCoins />
       <PlayerPropertiesList />

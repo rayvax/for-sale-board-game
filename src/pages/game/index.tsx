@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { markDbError } from '../../api/game/api';
 import { useGameAPI } from '../../api/game/hooks';
 import { leaveRoom } from '../../api/rooms/api';
-import { useAppDispatch } from '../../hooks/redux';
 import { GamePhase } from '../../models/game';
 import { useToken } from '../../store/account/hooks';
 import { useGamePhase, useGameStoreState } from '../../store/game/hooks';
-import { setRoomCode } from '../../store/room/actions';
 import { useRoomCode } from '../../store/room/hooks';
+import { getErrorMessage } from '../../utils/error';
 import { roomsDashboardPath } from '../../utils/paths';
 import { GameTable } from './GameTable';
 import { OpponentsList } from './opponents/OpponentsList';
@@ -26,52 +26,16 @@ const CornerButtonsList = styled.button`
 `;
 
 export function GamePage() {
-  const stateRoomCode = useRoomCode();
   const { code } = useParams();
-  const dispatch = useAppDispatch();
   const gameStoreState = useGameStoreState();
   const gamePhase = useGamePhase();
-  const gameApi = useGameAPI();
   const token = useToken();
   const roomCode = useRoomCode();
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [updateGameStateTimeout, setUpdateGameStateTimeout] =
-    useState<NodeJS.Timeout | null>(null);
 
-  //update game state
-  useEffect(() => {
-    async function updateGameStateInTimeout() {
-      if (!gameApi) return;
-
-      try {
-        await gameApi!.updateGameState();
-        console.log('game state updated');
-      } catch (e) {
-        console.error(e);
-      }
-
-      if (gameApi) {
-        setUpdateGameStateTimeout(
-          setTimeout(() => updateGameStateInTimeout(), 5000),
-        );
-      }
-    }
-
-    updateGameStateInTimeout();
-
-    return () => {
-      if (updateGameStateTimeout) clearTimeout(updateGameStateTimeout);
-    };
-  }, [gameApi]);
-
-  //save room code
-  useEffect(() => {
-    if (!code || code === stateRoomCode) return;
-
-    dispatch(setRoomCode({ code }));
-  }, [code, stateRoomCode, dispatch]);
+  useUpdatedGameState(roomCode);
 
   function handleLeaveGame() {
     if (!token || !roomCode) return;
@@ -79,8 +43,6 @@ export function GamePage() {
     (async function () {
       setIsLoading(true);
       try {
-        if (updateGameStateTimeout) clearTimeout(updateGameStateTimeout);
-
         await leaveRoom(token, roomCode);
         navigate(roomsDashboardPath);
       } finally {
@@ -122,4 +84,33 @@ export function GamePage() {
       )}
     </GamePageWrapper>
   );
+}
+
+function useUpdatedGameState(code: string | null) {
+  const gameApi = useGameAPI();
+  const stateRoomCode = useRoomCode();
+
+  //update game state
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    async function updateGameStateInTimeout() {
+      if (!code || code !== stateRoomCode || !gameApi) return;
+
+      try {
+        await gameApi!.updateGameState();
+        console.log('game state updated');
+      } catch (e) {
+        console.error(e);
+        markDbError(getErrorMessage(e));
+      }
+
+      if (gameApi) {
+        timeout = setTimeout(() => updateGameStateInTimeout(), 5000);
+      }
+    }
+
+    updateGameStateInTimeout();
+
+    return () => clearTimeout(timeout);
+  }, [gameApi, code, stateRoomCode]);
 }

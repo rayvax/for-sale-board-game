@@ -69,7 +69,9 @@ export function OpponentItem({ opponent }: OppenentProps) {
         )}
       </OutsideWrapper>
       <OpponentInfoRow>
-        <OpponentNickname>{opponent.nickname}</OpponentNickname>
+        <OpponentNickname>
+          {opponent.orderNumber}. {opponent.nickname}
+        </OpponentNickname>
       </OpponentInfoRow>
       <OpponentInfoRow>
         <dt>Passed</dt>
@@ -79,7 +81,7 @@ export function OpponentItem({ opponent }: OppenentProps) {
         <dt>Bid</dt>
         <dd>{opponent.bid}</dd>
       </OpponentInfoRow>
-      {!!opponent.lastBidProperty && !!opponent.lastBidMoney && (
+      {!!opponent.lastBidProperty && opponent.lastBidMoney !== undefined && (
         <>
           <OpponentInfoRow>
             <dt>Last bid property</dt>
